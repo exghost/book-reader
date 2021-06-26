@@ -45,7 +45,7 @@ exports.createBook = async(req, res) => {
     try {
         let {title, isbn, publish_year, edition} = req.body;
         if(req.files.length < 1) throw new Error('Book file required');
-
+        
         const book = new Book({
             title,
             isbn, 
