@@ -1,10 +1,11 @@
 import './App.css';
-import RegisterForm from './auth/components/RegisterForm';
+import RegisterForm from './user/components/RegisterForm';
+import LoginForm from './user/components/LoginForm';
 
 function App() {
   return (
     <div className="App">
-      <RegisterForm />
+      <LoginForm />
     </div>
   );
 }
