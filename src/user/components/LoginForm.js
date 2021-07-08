@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { loginUser } from '../reducers/userSlice';
 import './RegisterForm.css';
 
 const LoginForm = () => {
@@ -7,26 +9,16 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(''); 
 
+    const dispatch = useDispatch();
+    const loginStatus = useSelector(state => state.user.login);
+    const loginError = useSelector(state => state.user.error);
+
     const onFormSubmit = async (e) => {
         e.preventDefault();
-        
-        const result = await axios({
-            url: 'http://localhost:4056/graphql',
-            method: 'post',
-            data: {
-                query: `
-                mutation {
-                    login(email: "${email}", password: "${password}") {
-                        id
-                        email
-                    }
-                }
-                `
-            },
-            withCredentials: true
-        });
 
-        console.log(result);
+        if(loginStatus === 'idle') {
+            dispatch(loginUser({email, password}));
+        }
     };
 
     return (
@@ -38,8 +30,9 @@ const LoginForm = () => {
                     <input type="email" id="userEmail" className="form-grid-item form-field" value={email} onChange={(e) => setEmail(e.target.value)}  />
                     <label htmlFor="userPassword" className="form-grid-item form-label">Password</label>
                     <input type="password" id="userPassword" className="form-grid-item form-field" value={password} onChange={(e) => setPassword(e.target.value)} />
-                    {error && <div className="error-container">{error}</div> }
+                    {loginError && <div className="error-container">{loginError}</div> }
                     <button type="submit" className="form-submit" value="submit">Login</button>
+                    {}
                 </div>
             </form>
         </div>
