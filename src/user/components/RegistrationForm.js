@@ -2,32 +2,35 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 
-import { loginUser } from '../reducers/userSlice';
+import { registerNewUser } from '../reducers/userSlice';
+
 
 const schema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Required'),
-    password: yup.string().required('Required')
+    password: yup.string().required('Required'),
+    confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
 });
 
-const LoginForm = () => {
+const RegistrationForm = () => {
     const dispatch = useDispatch();
     const authStatus = useSelector(state => state.user.authStatus);
-    const loginError = useSelector(state => state.user.error);
+    const registerError = useSelector(state => state.user.error);
 
     const onSubmitHandler = async (values) => {
         if(authStatus === 'idle') {
-            dispatch(loginUser(values));
+            dispatch(registerNewUser(values));
         }
     };
 
     return (
         <div className="container-sm">
-            <h3>Login</h3>
+            <h3>Register</h3>
             <Formik
                 initialValues= {
                     {
                         email: '',
-                        password: ''
+                        password: '',
+                        confirmPassword: ''
                     }
                 }
                 validationSchema={schema}
@@ -44,8 +47,12 @@ const LoginForm = () => {
                         <Field type="password" name="password" placeholder="Password" className="form-control" />
                         <ErrorMessage name="password" component="div" />
                     </div>
-                    {loginError && <div className="error-container">{loginError}</div> }
-                    <button type="submit" disabled={authStatus !== 'idle' ? true : false} className="btn btn-primary">Login</button>
+                    <div className="form-group">
+                        <Field type="password" name="confirmPassword" placeholder="Confirm Password" className="form-control" />
+                        <ErrorMessage name="confirmPassword" component="div" />
+                    </div>
+                    {registerError && <div className="error-container">{registerError}</div> }
+                    <button type="submit" disabled={authStatus !== 'idle' ? true : false} className="btn btn-primary">Register</button>
                 </Form>
             </Formik>
 
@@ -53,4 +60,4 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default RegistrationForm;

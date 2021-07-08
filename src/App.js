@@ -1,10 +1,10 @@
-import RegisterForm from './user/components/RegisterForm';
+import RegistrationForm from './user/components/RegistrationForm';
 import LoginForm from './user/components/LoginForm';
 
 function App() {
   return (
     <div className="App">
-      <LoginForm />
+      <RegistrationForm />
     </div>
   );
 }
