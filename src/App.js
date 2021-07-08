@@ -1,4 +1,3 @@
-import './App.css';
 import RegisterForm from './user/components/RegisterForm';
 import LoginForm from './user/components/LoginForm';
 
