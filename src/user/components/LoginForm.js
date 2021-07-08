@@ -1,40 +1,54 @@
-import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as yup from 'yup';
 
 import { loginUser } from '../reducers/userSlice';
-import './RegisterForm.css';
+
+const schema = yup.object().shape({
+    email: yup.string().email('Invalid email').required('Required'),
+    password: yup.string().required('Required')
+});
 
 const LoginForm = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(''); 
-
     const dispatch = useDispatch();
     const loginStatus = useSelector(state => state.user.login);
     const loginError = useSelector(state => state.user.error);
 
-    const onFormSubmit = async (e) => {
-        e.preventDefault();
-
+    const onSubmitHandler = async (values) => {
         if(loginStatus === 'idle') {
-            dispatch(loginUser({email, password}));
+            dispatch(loginUser(values));
         }
     };
 
     return (
-        <div>
-            <form onSubmit={(e) => onFormSubmit(e)}>
-                <div className="form-grid-container">
-                    <div className="form-header">Login Form</div>
-                    <label htmlFor="userEmail" className="form-grid-item form-label">Email</label>
-                    <input type="email" id="userEmail" className="form-grid-item form-field" value={email} onChange={(e) => setEmail(e.target.value)}  />
-                    <label htmlFor="userPassword" className="form-grid-item form-label">Password</label>
-                    <input type="password" id="userPassword" className="form-grid-item form-field" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div className="container-sm">
+            <h3>Login</h3>
+            <Formik
+                initialValues= {
+                    {
+                        email: '',
+                        password: ''
+                    }
+                }
+                validationSchema={schema}
+                onSubmit={(values) => {
+                    onSubmitHandler(values);
+                }}
+            >
+                <Form>
+                    <div className="form-group">
+                        <Field type="email" name="email" placeholder="Email address" className="form-control" />
+                        <ErrorMessage name="email" component="div" />
+                    </div>
+                    <div className="form-group">
+                        <Field type="password" name="password" placeholder="Password" className="form-control" />
+                        <ErrorMessage name="password" component="div" />
+                    </div>
                     {loginError && <div className="error-container">{loginError}</div> }
-                    <button type="submit" className="form-submit" value="submit">Login</button>
-                    {}
-                </div>
-            </form>
+                    <button type="submit" disabled={loginStatus !== 'idle' ? true : false} className="btn btn-primary">Login</button>
+                </Form>
+            </Formik>
+
         </div>
     );
 };

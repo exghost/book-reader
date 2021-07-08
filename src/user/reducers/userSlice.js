@@ -10,7 +10,7 @@ const initialState = {
 
 export const loginUser = createAsyncThunk(
     'user/loginStatus',
-    async(credentials, { rejectWithValue }) => {
+    async(credentials) => {
         let response;
         try {
             response = await login(credentials.email, credentials.password);
