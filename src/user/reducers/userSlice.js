@@ -6,7 +6,8 @@ const initialState = {
     currentRequestId: undefined,
     userData: {},
     loggedIn: false,
-    error: ''
+    error: '',
+    registrationComplete: false
 };
 
 export const loginUser = createAsyncThunk(
@@ -29,6 +30,7 @@ export const registerNewUser = createAsyncThunk(
         try {
             response = await registerUser(email, password);
         } catch(err) {
+            console.log(err);
             throw err;
         }
 
@@ -73,16 +75,17 @@ const userSlice = createSlice({
                 state.currentRequestId = undefined;
             }
         },
-        [registerUser.pending]: (state, { meta }) => {
+        [registerNewUser.pending]: (state, { meta }) => {
             if(
                 state.authStatus === 'idle' &&
                 !state.loggedIn
             ) {
                 state.authStatus = 'registering';
                 state.currentRequestId = meta.requestId;
+                state.registrationComplete = false;
             }
         },
-        [registerUser.fulfilled]: (state, { meta, payload }) => {
+        [registerNewUser.fulfilled]: (state, { meta, payload }) => {
             if(
                 state.authStatus === 'registering' &&
                 state.currentRequestId === meta.requestId
@@ -90,9 +93,10 @@ const userSlice = createSlice({
                 state.authStatus = 'idle';
                 state.currentRequestId = undefined;
                 state.error = '';
+                state.registrationComplete = true;
             }
         },
-        [registerUser.rejected]: (state, { meta, error }) => {
+        [registerNewUser.rejected]: (state, { meta, error }) => {
             if(
                 state.authStatus === 'registering' &&
                 state.currentRequestId === meta.requestId
@@ -100,6 +104,7 @@ const userSlice = createSlice({
                 state.authStatus = 'idle';
                 state.error = error.message;
                 state.currentRequestId = undefined;
+                state.registrationComplete = false;
             }
         },
     }

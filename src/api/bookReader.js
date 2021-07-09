@@ -30,8 +30,6 @@ export const login = async (email, password ) => {
 };
 
 export const registerUser = async (email, password) => {
-    console.log(email);
-    console.log(password);
     let response;
     try {
         response = await bookReaderBase({
@@ -53,7 +51,5 @@ export const registerUser = async (email, password) => {
     }
 
     if(response.data.errors) throw new Error('An account with that email already exists');
-    //console.log(response);
-    return [];
     return response.data?.data?.registerUser;
 }

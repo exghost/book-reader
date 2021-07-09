@@ -2,7 +2,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 
-import { registerNewUser } from '../reducers/userSlice';
+import { registerNewUser } from '../../reducers/userSlice';
+
 
 
 const schema = yup.object().shape({
@@ -15,6 +16,7 @@ const RegistrationForm = () => {
     const dispatch = useDispatch();
     const authStatus = useSelector(state => state.user.authStatus);
     const registerError = useSelector(state => state.user.error);
+    
 
     const onSubmitHandler = async (values) => {
         if(authStatus === 'idle') {
@@ -23,7 +25,7 @@ const RegistrationForm = () => {
     };
 
     return (
-        <div className="container-sm">
+    <div className="container-sm">
             <h3>Register</h3>
             <Formik
                 initialValues= {
@@ -54,8 +56,7 @@ const RegistrationForm = () => {
                     {registerError && <div className="error-container">{registerError}</div> }
                     <button type="submit" disabled={authStatus !== 'idle' ? true : false} className="btn btn-primary">Register</button>
                 </Form>
-            </Formik>
-
+            </Formik> 
         </div>
     );
 };
