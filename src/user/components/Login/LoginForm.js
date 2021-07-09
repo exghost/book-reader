@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 
-import { loginUser } from '../reducers/userSlice';
+import { loginUser } from '../../reducers/userSlice';
 
 const schema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Required'),
