@@ -52,4 +52,43 @@ export const registerUser = async (email, password) => {
 
     if(response.data.errors) throw new Error('An account with that email already exists');
     return response.data?.data?.registerUser;
+};
+
+export const addBook = async ({title, isbn, publishYear, edition, bookFile }) => {
+    let formData = new FormData();
+
+    const query = `
+    mutation ($data: CreateBookInput!, $file: Upload!) { 
+        addBook(data: $data, file: $file) { id } 
+    } 
+    `;
+
+    const variables = {
+        data: {
+            title,
+            isbn,
+            publishYear: Number(publishYear),
+            edition: Number(edition)
+        },
+        file: null
+    }
+
+    const operations = JSON.stringify({ query, variables });
+    const map = JSON.stringify({ "0": ["variables.file"] });
+
+    formData.append("operations", operations);
+    formData.append("map", map);
+    formData.append("0", bookFile);
+
+    console.log(operations);
+    console.log(map);
+
+    let response = bookReaderBase({
+        method: "POST",
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true
+    });
+
+    console.log(response);
 }

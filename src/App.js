@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Registration from './user/components/Registration/Registration';
-import LoginForm from './user/components/LoginForm';
+import Login from './user/components/Login/Login';
+import AddBook from './book/components/AddBook';
 
 function App() {
   return (
@@ -11,7 +12,10 @@ function App() {
           <Registration />
         </Route>
         <Route exact path="/login">
-          <LoginForm />
+          <Login />
+        </Route>
+        <Route exact path="/book/add">
+          <AddBook />
         </Route>
       </Switch>
     </Router>
