@@ -1,19 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './TagInput.css';
 
 const TagInput = (props) => {
+    const { 
+        name,
+        onChange, 
+        tagBackgroundColor,
+        tagColor,
+        listData,
+        placeholder,
+        value
+    } = props;
+
     const [tagInput, setTagInput] = useState('');
-    const [tags, setTags] = useState([]);
-    const datalistId = `${ props.name || 'tagData' }_list`;
+    const [tags, setTags] = useState(value);
+    const datalistId = `${ name || 'tagData' }_list`;
+
+    const addTag = (tag) => {
+        if(!tags.includes(tag)) setTags([...tags, tag]);
+    }
+
+    const deleteTag = (index) => {
+        setTags(tags.filter((_, i) => i !== index));
+    }
 
     const onKeyPress = (e) => {
         let tag = tagInput.trim();
 
         if (e.charCode === 13) {
             e.preventDefault();
-            if(!tags.includes(tag)) setTags([...tags, tag]);
+            addTag(tag);
             setTagInput('');
         }
     }
@@ -28,20 +46,34 @@ const TagInput = (props) => {
         }
     }
 
-    const deleteTag = (index) => {
-        setTags(tags.filter((t, i) => i !== index));
+    const onBlur = () => {
+        let tag = tagInput.trim();
+
+        if(tag.length) {
+            addTag(tag);
+            setTagInput('');
+        }
     }
 
     const tagStyle = {
-        backgroundColor: props.tagBackgroundColor || 'mediumseagreen',
-        border: `1px solid ${props.tagBackgroundColor || 'mediumseagreen'}`,
-        color: props.tagColor || 'white'
+        backgroundColor: tagBackgroundColor || 'mediumseagreen',
+        border: `1px solid ${tagBackgroundColor || 'mediumseagreen'}`,
+        color: tagColor || 'white'
     }
 
     const buttonStyle = {
-        color: props.tagColor || 'white'
+        color: tagColor || 'white'
     }
- 
+
+    useEffect(() => {
+        if(onChange) onChange(tags);
+    }, [tags]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        console.log(value);
+        setTags(value);
+    }, [value]);
+  
     return (
         <div className="tag-container">
             {tags.map((tag, index) => (
@@ -62,16 +94,16 @@ const TagInput = (props) => {
             ))}
             <input 
                 value={tagInput}
-                placeholder={props.placeholder || "Enter a tag"}
+                placeholder={placeholder || "Enter a tag"}
                 onChange={(e) => { setTagInput(e.target.value) }}
                 onKeyPress={onKeyPress}
                 onKeyUp={onKeyUp}
+                onBlur={onBlur}
+                list={datalistId}
             />
-            {props.data && (
-                <datalist id={datalistId}>
-                    {props.data.map((item, index) => <option key={index}>{item}</option>)}
-                </datalist>
-            )}
+            <datalist id={datalistId}>
+                {listData && listData.map((item, index) => <option key={index}>{item}</option>)}
+            </datalist>
             
         </div>
     );
@@ -80,9 +112,11 @@ const TagInput = (props) => {
 TagInput.propTypes = {
     name: PropTypes.string,
     placeholder: PropTypes.string,
-    data: PropTypes.array,
+    listData: PropTypes.array,
     tagBackgroundColor: PropTypes.string,
-    tagColor: PropTypes.string
+    tagColor: PropTypes.string,
+    onChange: PropTypes.func,
+    value: PropTypes.array.isRequired
 }
 
 export default TagInput;
