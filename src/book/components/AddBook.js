@@ -1,6 +1,9 @@
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import { addBook } from "../../api/bookReader";
+import TagInput from "../../util/components/TagInput";
+
 
 const AddBook = () => {
     const onSubmitHandler = async(values) => {
@@ -42,6 +45,9 @@ const AddBook = () => {
                         <div className="form-group">
                             <Field type="text" name="publishYear" placeholder="Year Published" />
                             <ErrorMessage name="publishYear" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <TagInput placeholder="Enter author" name="authors" />
                         </div>
                         <div className="form-group">
                             <input type="file" name="bookFile" onChange={(e) => formProps.setFieldValue("bookFile", e.target.files[0]) } />

@@ -1,9 +1,10 @@
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import LoginForm from './LoginForm';
 
-const Registration = () => {
+const Login = () => {
     const isLoggedIn = useSelector(state => state.user.loggedIn);
 
     return (
@@ -16,4 +17,4 @@ const Registration = () => {
     );
 }
 
-export default Registration;
+export default Login;
