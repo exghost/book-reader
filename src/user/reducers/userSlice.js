@@ -14,11 +14,7 @@ export const loginUser = createAsyncThunk(
     'user/loginStatus',
     async({ email, password }) => {
         let response;
-        try {
-            response = await login(email, password);
-        } catch(err) {
-            throw err;
-        } 
+        response = await login(email, password);
         return response;
     }
 );
@@ -85,7 +81,7 @@ const userSlice = createSlice({
                 state.registrationComplete = false;
             }
         },
-        [registerNewUser.fulfilled]: (state, { meta, payload }) => {
+        [registerNewUser.fulfilled]: (state, { meta }) => {
             if(
                 state.authStatus === 'registering' &&
                 state.currentRequestId === meta.requestId
