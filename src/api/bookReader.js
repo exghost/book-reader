@@ -54,8 +54,10 @@ export const registerUser = async (email, password) => {
     return response.data?.data?.registerUser;
 };
 
-export const addBook = async ({title, isbn, publishYear, edition, bookFile }) => {
+export const addBook = async ({title, isbn, publishYear, edition, authors, genres, tags, bookFile }) => {
     let formData = new FormData();
+
+    console.log(authors);
 
     const query = `
     mutation ($data: CreateBookInput!, $file: Upload!) { 
@@ -68,7 +70,10 @@ export const addBook = async ({title, isbn, publishYear, edition, bookFile }) =>
             title,
             isbn,
             publishYear: Number(publishYear),
-            edition: Number(edition)
+            edition: Number(edition),
+            authors,
+            genres,
+            tags
         },
         file: null
     }
@@ -80,10 +85,7 @@ export const addBook = async ({title, isbn, publishYear, edition, bookFile }) =>
     formData.append("map", map);
     formData.append("0", bookFile);
 
-    console.log(operations);
-    console.log(map);
-
-    let response = bookReaderBase({
+    let response = await bookReaderBase({
         method: "POST",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },

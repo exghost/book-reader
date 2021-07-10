@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import { addBook } from "../../api/bookReader";
 import TagInput from "../../util/components/TagInput";
 
-
 const AddBook = () => {
+    const [authors, setAuthors] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [tags, setTags] = useState([]);
+
     const onSubmitHandler = async(values) => {
-        console.log(values);
         await addBook(values);
+    }
+
+    const clearForm = (values) => {
+        values.title = '';
+        values.isbn = '';
+        values.edition = '';
+        values.publishYear = '';
+        values.bookFile = '';
+        setAuthors([]);
+        setGenres([]);
+        setTags([]);
     }
 
     return (
@@ -21,7 +34,9 @@ const AddBook = () => {
                         edition: '',
                         publishYear: '',
                         bookFile: '',
-                        authors: []
+                        authors,
+                        genres,
+                        tags
                     }
                 }
                 onSubmit={(values) => {
@@ -47,12 +62,25 @@ const AddBook = () => {
                             <ErrorMessage name="publishYear" component="div" />
                         </div>
                         <div className="form-group">
-                            <TagInput placeholder="Enter author" name="authors" />
+                            <div className="label">Authors</div>
+                            <TagInput value={authors} placeholder="Enter author" name="authors" tagBackgroundColor="tomato" data={["Robin Nixon"]} onChange={(authors) => formProps.setFieldValue('authors', authors) } />
+                        </div>
+                        <div className="form-group">
+                            <div className="label">Genres</div>
+                            <TagInput value={genres} placeholder="Enter genre" name="genres" data={[]} onChange={(genres) => formProps.setFieldValue('genres', genres) } />
+                        </div>
+                        <div className="form-group">
+                            <div className="label">Tags</div>
+                            <TagInput value={tags} placeholder="Enter tag" name="tags" tagBackgroundColor="dodgerblue" data={[]} onChange={(tags) => formProps.setFieldValue('tags', tags) } />
                         </div>
                         <div className="form-group">
                             <input type="file" name="bookFile" onChange={(e) => formProps.setFieldValue("bookFile", e.target.files[0]) } />
                         </div>
                         <button type="submit">Submit</button>
+                        <button onClick={(e) => {
+                            e.preventDefault();
+                            clearForm(formProps.values);
+                        }}>Clear</button>
                     </Form>
                 )}
             </Formik>
