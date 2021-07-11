@@ -61,7 +61,23 @@ export const addBook = async ({title, isbn, publishYear, edition, authors, genre
 
     const query = `
     mutation ($data: CreateBookInput!, $file: Upload!) { 
-        addBook(data: $data, file: $file) { id } 
+        addBook(data: $data, file: $file) { 
+            id 
+            title 
+            isbn
+            edition 
+            publishYear
+            filename
+            authors {
+                name
+            }
+            tags {
+                label
+            }
+            genres {
+                label
+            }
+        } 
     } 
     `;
 
@@ -93,4 +109,43 @@ export const addBook = async ({title, isbn, publishYear, edition, authors, genre
     });
 
     console.log(response);
+    return response.data?.data?.addBook;
+};
+
+export const fetchBooksByCurrentUser = async () => {    
+    let response;
+    try {
+        response = await bookReaderBase({
+            method: 'post',
+            data: {
+                query: `
+                    query {
+                        booksByCurrentUser {
+                            id
+                            title
+                            isbn
+                            edition
+                            publishYear
+                            filename
+                            authors {
+                                name
+                            }
+                            genres {
+                                label
+                            }
+                            tags {
+                                label
+                            }
+                        }
+                    }
+                `
+            },
+            withCredentials: true
+        });
+    } catch(err) {
+        throw new Error('Unable to fetch books');
+    }
+    console.log(response);
+    if(response.data.errors) throw new Error(response.data.errors.message);
+    return response.data?.data?.booksByCurrentUser;
 }
