@@ -11,7 +11,7 @@ const Login = () => {
         <div>
             { !isLoggedIn && <LoginForm /> }
             { isLoggedIn && 
-                <Redirect to='/book/add' />
+                <Redirect to='/books' />
             }
         </div>
     );
