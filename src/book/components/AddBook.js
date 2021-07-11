@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-import { addBook } from "../../api/bookReader";
+import { addNewBook } from '../reducers/booksSlice';
 import TagInput from "../../util/components/TagInput";
 
 const AddBook = () => {
-    const [authors, setAuthors] = useState([]);
-    const [genres, setGenres] = useState([]);
-    const [tags, setTags] = useState([]);
+    const [authors] = useState([]);
+    const [genres] = useState([]);
+    const [tags] = useState([]);
 
     const onSubmitHandler = async(values) => {
-        await addBook(values);
+        await addNewBook(values);
     }
-
+/*
     const clearForm = (values) => {
         values.title = '';
         values.isbn = '';
@@ -23,7 +23,7 @@ const AddBook = () => {
         setGenres([]);
         setTags([]);
     }
-
+*/
     return (
         <div className="container-sm">
             <Formik
@@ -77,10 +77,6 @@ const AddBook = () => {
                             <input type="file" name="bookFile" onChange={(e) => formProps.setFieldValue("bookFile", e.target.files[0]) } />
                         </div>
                         <button type="submit">Submit</button>
-                        <button onClick={(e) => {
-                            e.preventDefault();
-                            clearForm(formProps.values);
-                        }}>Clear</button>
                     </Form>
                 )}
             </Formik>
