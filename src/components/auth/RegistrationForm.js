@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { registerUser } from '../../../api/bookReader';
+import { registerUser } from 'api/bookReader';
 
 const schema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Required'),

@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import RegistrationForm from './user/components/Registration/RegistrationForm';
-import Login from './user/components/Login/Login';
-import AddBook from './book/components/AddBook';
-import BookLibrary from './book/components/BookLibrary';
+import RegistrationForm from 'components/auth/RegistrationForm';
+import Login from 'components/auth/Login';
+import AddBook from 'components/books/AddBook';
+import BookLibrary from 'components/books/BookLibrary';
 
 function App() {
   return (

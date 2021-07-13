@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-import { addNewBook } from '../reducers/booksSlice';
-import TagInput from "../../util/components/TagInput";
+import { addNewBook } from 'state/reducers/booksSlice';
+import TagInput from 'components/TagInput';
 
 const AddBook = () => {
     const [authors] = useState([]);

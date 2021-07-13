@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { fetchLibrary } from '../reducers/booksSlice';
-import LibraryRow from './LibraryRow';
+import { fetchLibrary } from 'state/reducers/booksSlice';
+import LibraryRow from 'components/books/LibraryRow';
 
 const BookLibrary = () => {
     const dispatch = useDispatch();

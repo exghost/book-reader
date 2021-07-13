@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login } from '../../api/bookReader';
+import { login } from 'api/bookReader';
 
 const initialState = {
     authStatus: 'idle', 
