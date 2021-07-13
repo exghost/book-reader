@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login } from 'api/bookReader';
+import { login, invalidateTokens } from 'api/bookReader';
 
 const initialState = {
     authStatus: 'idle', 
@@ -17,6 +17,15 @@ export const loginUser = createAsyncThunk(
         return response;
     }
 );
+
+export const logoutUser = createAsyncThunk(
+    'user/logoutStatus',
+    async() => {
+        let response;
+        response = await invalidateTokens();
+        return response;
+    }
+)
 
 const userSlice = createSlice({
     name: 'user',
@@ -54,6 +63,37 @@ const userSlice = createSlice({
                 state.currentRequestId = undefined;
             }
         },
+        [logoutUser.pending]: (state, { meta }) => {
+            if(
+                state.authStatus === 'idle' &&
+                state.loggedIn
+            ) {
+                state.authStatus = 'loggingOut',
+                state.currentRequestId = meta.requestId;
+            }
+        },
+        [logoutUser.fulfilled]: (state, { meta }) => {
+            if(
+                state.authStatus === 'loggingOut' &&
+                state.currentRequestId === meta.requestId
+            ) {
+                state.loggedIn = false;
+                state.authStatus = 'idle';
+                state.currentRequestId = undefined;
+                state.error = '';
+                state.userData = {};
+            }
+        },
+        [logoutUser.rejected]: (state, { meta, error }) => {
+            if(
+                state.authStatus === 'loggingOut' &&
+                state.currentRequestId === meta.requestId
+            ) {
+                state.authStatus = 'idle';
+                state.error = error.message;
+                state.currentRequestId = undefined;
+            }
+        }
     }
 }); 
 

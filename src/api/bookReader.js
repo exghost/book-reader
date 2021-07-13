@@ -29,6 +29,31 @@ export const login = async (email, password ) => {
     return response.data?.data?.login;
 };
 
+export const invalidateTokens = async () => {
+    let response;
+    try {
+        response = await bookReaderBase({
+            method: 'post',
+            data: {
+                query: `
+                mutation {
+                    invalidateTokens
+                }
+                `
+            },
+            withCredentials: true
+        });
+    } catch {
+        throw new Error('Unable to invalidate tokens');
+    }
+
+    if(response.data.errors) {
+        console.log(response.data.errors);
+        throw new Error(`Unable to invalidate tokens`);
+    }
+    return response.data?.data?.login;
+}
+
 export const registerUser = async (email, password) => {
     let response;
     try {
