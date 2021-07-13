@@ -1,0 +1,8 @@
+.navbar-nav {
+    display: flex;
+    flex-direction: row;
+}
+
+.nav-item {
+    padding-right: 5px;
+}
