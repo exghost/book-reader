@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import './TagInput.css';
+import 'components/TagInput/style.css';
 
 const TagInput = (props) => {
     const { 
