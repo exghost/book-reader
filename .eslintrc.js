@@ -2,11 +2,13 @@ module.exports = {
     "env": {
         "browser": true,
         "es2021": true,
-        "node": true
+        "node": true,
+        "jest/globals": true
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "plugin:jest/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -17,7 +19,8 @@ module.exports = {
     },
     "plugins": [
         "react",
-        "react-hooks"
+        "react-hooks",
+        "jest"
     ],
     "rules": {
     }
