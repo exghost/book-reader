@@ -1,13 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login, registerUser } from '../../api/bookReader';
+import { login } from '../../api/bookReader';
 
 const initialState = {
     authStatus: 'idle', 
     currentRequestId: undefined,
     userData: {},
     loggedIn: false,
-    error: '',
-    registrationComplete: false
+    error: ''
 };
 
 export const loginUser = createAsyncThunk(
@@ -18,22 +17,6 @@ export const loginUser = createAsyncThunk(
         return response;
     }
 );
-
-export const registerNewUser = createAsyncThunk(
-    'user/registerStatus',
-    async ({ email, password }) => {
-        let response;
-        try {
-            response = await registerUser(email, password);
-        } catch(err) {
-            console.log(err);
-            throw err;
-        }
-
-        return response;
-    }
-
-)
 
 const userSlice = createSlice({
     name: 'user',
@@ -69,38 +52,6 @@ const userSlice = createSlice({
                 state.authStatus = 'idle';
                 state.error = error.message;
                 state.currentRequestId = undefined;
-            }
-        },
-        [registerNewUser.pending]: (state, { meta }) => {
-            if(
-                state.authStatus === 'idle' &&
-                !state.loggedIn
-            ) {
-                state.authStatus = 'registering';
-                state.currentRequestId = meta.requestId;
-                state.registrationComplete = false;
-            }
-        },
-        [registerNewUser.fulfilled]: (state, { meta }) => {
-            if(
-                state.authStatus === 'registering' &&
-                state.currentRequestId === meta.requestId
-            ) {
-                state.authStatus = 'idle';
-                state.currentRequestId = undefined;
-                state.error = '';
-                state.registrationComplete = true;
-            }
-        },
-        [registerNewUser.rejected]: (state, { meta, error }) => {
-            if(
-                state.authStatus === 'registering' &&
-                state.currentRequestId === meta.requestId
-            ) {
-                state.authStatus = 'idle';
-                state.error = error.message;
-                state.currentRequestId = undefined;
-                state.registrationComplete = false;
             }
         },
     }
