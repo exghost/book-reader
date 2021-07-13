@@ -26,8 +26,6 @@ const RegistrationForm = () => {
             setError(err.message);
         }
 
-        console.log(response);
-
         if(response) setRegistrationStatus('complete');
     };
 
