@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import Registration from './user/components/Registration/Registration';
+import RegistrationForm from './user/components/Registration/RegistrationForm';
 import Login from './user/components/Login/Login';
 import AddBook from './book/components/AddBook';
 import BookLibrary from './book/components/BookLibrary';
@@ -11,7 +11,7 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/">
-          <Registration />
+          <RegistrationForm />
         </Route>
         <Route exact path="/login">
           <Login />

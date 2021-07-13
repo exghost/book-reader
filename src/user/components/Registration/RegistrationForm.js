@@ -1,11 +1,9 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { registerNewUser } from '../../reducers/userSlice';
-
-
+import { registerUser } from '../../../api/bookReader';
 
 const schema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Required'),
@@ -14,51 +12,70 @@ const schema = yup.object().shape({
 });
 
 const RegistrationForm = () => {
-    const dispatch = useDispatch();
-    const authStatus = useSelector(state => state.user.authStatus);
-    const registerError = useSelector(state => state.user.error);
+    const [registrationStatus, setRegistrationStatus] = useState('idle');
+    const [error, setError] = useState('');
     
 
-    const onSubmitHandler = async (values) => {
-        if(authStatus === 'idle') {
-            dispatch(registerNewUser(values));
+    const onSubmitHandler = async ({ email, password }) => {
+        let response;
+        try {
+            setRegistrationStatus('pending');
+            response = await registerUser(email, password);
+        } catch(err) {
+            setRegistrationStatus('idle');
+            setError(err.message);
         }
+
+        console.log(response);
+
+        if(response) setRegistrationStatus('complete');
     };
 
     return (
-    <div className="container-sm">
-            <h3>Register</h3>
-            <Formik
-                initialValues= {
-                    {
-                        email: '',
-                        password: '',
-                        confirmPassword: ''
+    <div>
+        { registrationStatus !== 'complete' &&
+            <div className="container-sm">
+                <h3>Register</h3>
+                <Formik
+                    initialValues= {
+                        {
+                            email: '',
+                            password: '',
+                            confirmPassword: ''
+                        }
                     }
-                }
-                validationSchema={schema}
-                onSubmit={(values) => {
-                    onSubmitHandler(values);
-                }}
-            >
-                <Form>
-                    <div className="form-group">
-                        <Field type="email" name="email" placeholder="Email address" className="form-control" />
-                        <ErrorMessage name="email" component="div" />
-                    </div>
-                    <div className="form-group">
-                        <Field type="password" name="password" placeholder="Password" className="form-control" />
-                        <ErrorMessage name="password" component="div" />
-                    </div>
-                    <div className="form-group">
-                        <Field type="password" name="confirmPassword" placeholder="Confirm Password" className="form-control" />
-                        <ErrorMessage name="confirmPassword" component="div" />
-                    </div>
-                    {registerError && <div className="error-container">{registerError}</div> }
-                    <button type="submit" disabled={authStatus !== 'idle' ? true : false} className="btn btn-primary">Register</button>
-                </Form>
-            </Formik> 
-        </div>
+                    validationSchema={schema}
+                    onSubmit={(values) => {
+                        onSubmitHandler(values);
+                    }}
+                >
+                    <Form>
+                        <div className="form-group">
+                            <Field type="email" name="email" placeholder="Email address" className="form-control" />
+                            <ErrorMessage name="email" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <Field type="password" name="password" placeholder="Password" className="form-control" />
+                            <ErrorMessage name="password" component="div" />
+                        </div>
+                        <div className="form-group">
+                            <Field type="password" name="confirmPassword" placeholder="Confirm Password" className="form-control" />
+                            <ErrorMessage name="confirmPassword" component="div" />
+                        </div>
+                        {error && <div className="error-container">{error}</div> }
+                        <button type="submit" disabled={registrationStatus !== 'idle' ? true : false} className="btn btn-primary">Register</button>
+                    </Form>
+                </Formik> 
+            </div>
+        }
+        {
+            registrationStatus === 'complete' && 
+            <div>
+                <h3>Registration Successful!</h3>
+                <Link to='/login'>Login?</Link>
+            </div>
+        }
+    </div>
     );
 };
 
