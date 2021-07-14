@@ -70,12 +70,17 @@ const TagInput = (props) => {
     }
 
     useEffect(() => {
-        if(onChange) onChange(tags);
+        let mounted = true;
+        if(onChange && mounted) onChange(tags);
+
+        return () => { mounted = false; }
     }, [tags]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        console.log(value);
-        setTags(value);
+        let mounted = true;
+        if(mounted) setTags(value);
+
+        return () => { mounted = false; }
     }, [value]);
   
     return (
