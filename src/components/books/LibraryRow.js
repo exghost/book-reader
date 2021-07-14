@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const LibraryRow = ({ bookData }) => {
     return (
@@ -36,7 +37,7 @@ const LibraryRow = ({ bookData }) => {
                 <button className="btn btn-primary">Read</button>
             </td>
             <td>
-                <button className="btn btn-secondary">Edit</button>
+                <Link className="btn btn-secondary" to={`/books/edit/${bookData.id}`}>Edit</Link>
             </td>
             <td>
                 <button className="btn btn-secondary">Download</button>

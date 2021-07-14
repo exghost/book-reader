@@ -79,6 +79,32 @@ export const registerUser = async (email, password) => {
     return response.data?.data?.registerUser;
 };
 
+export const getCurrentUser = async () => {
+    let response;
+    try {
+        response = await bookReaderBase({
+            method: 'post',
+            data: {
+                query: `
+                    query {
+                        me {
+                            id
+                            email
+                        }
+                    }
+                `
+            },
+            withCredentials: true
+        })
+    } catch(err) {
+        throw new Error('Unable to connect');
+    }
+
+    if(response.data?.errors) throw new Error(response.data.errors.message);
+    
+    return response.data?.data?.me;
+}
+
 export const addBook = async ({title, isbn, publishYear, edition, authors, genres, tags, bookFile }) => {
     let formData = new FormData();
 
@@ -137,6 +163,43 @@ export const addBook = async ({title, isbn, publishYear, edition, authors, genre
     return response.data?.data?.addBook;
 };
 
+export const fetchBook = async (id) => {
+    let response;
+    try {
+        response = await bookReaderBase({
+            method: 'post',
+            data: {
+                query: `
+                    query {
+                        book(id: ${id}) {
+                            id
+                            title
+                            isbn
+                            edition
+                            publishYear
+                            authors {
+                                name
+                            }
+                            genres {
+                                label
+                            }
+                            tags {
+                                label
+                            }
+                        }
+                    }
+                `
+            },
+            withCredentials: true
+        });
+    } catch(err) {
+        throw new Error('Unable to retrieve book');
+    }
+
+    if(response.data.errors) throw new Error(response.data.errors.message);
+    return response.data?.data?.book;
+}
+
 export const fetchBooksByCurrentUser = async () => {    
     let response;
     try {
@@ -170,7 +233,7 @@ export const fetchBooksByCurrentUser = async () => {
     } catch(err) {
         throw new Error('Unable to fetch books');
     }
-    console.log(response);
+
     if(response.data.errors) throw new Error(response.data.errors.message);
     return response.data?.data?.booksByCurrentUser;
 }
