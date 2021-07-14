@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import NavBar from 'components/NavBar';
@@ -7,10 +7,18 @@ import RegistrationForm from 'components/auth/RegistrationForm';
 import Login from 'components/auth/Login';
 import Logout from 'components/auth/Logout';
 import AddBook from 'components/books/AddBook';
+import EditBook from 'components/books/EditBook';
 import BookLibrary from 'components/books/BookLibrary';
 
+import { checkAuthentication } from 'state/reducers/userSlice';
+
 function App() {
+    const dispatch = useDispatch();
     const loggedIn = useSelector(state => state.user.loggedIn);
+
+    useEffect(async () => {
+        dispatch(checkAuthentication());
+    }, []);
 
   return (
     <div>
@@ -42,11 +50,14 @@ function App() {
                 <Route exact path="/books">
                     <BookLibrary />
                 </Route>
-                <Route exact path="/books/add">
+                <Route exact path="/books/new">
                     <AddBook />
                 </Route>
                 <Route exact path="/logout">
                     <Logout />
+                </Route>
+                <Route path="/books/edit/:id">
+                    <EditBook />
                 </Route>
             </Switch>
         </Router>
