@@ -12,14 +12,8 @@ const BookLibrary = () => {
         dispatch(fetchLibrary());
     }, []);
 
-    useEffect(() => {
-        console.log(books);
-    }, [books]);
-
     return (
         <div className="dark">
-            <h2>Your Library</h2>
-            <button className="btn btn-success">Add New Book</button>
             <div className="table-responsive">
                 <table className="library table table-dark table-striped table-hover">
                     <thead>
