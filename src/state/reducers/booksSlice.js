@@ -3,7 +3,7 @@ import {
     addBook, 
     fetchBooksByCurrentUser, 
     updateBook 
-} from 'api/bookReader';
+} from 'api/bookReader/books';
 
 const initialState = {
     booksStatus: 'idle', 

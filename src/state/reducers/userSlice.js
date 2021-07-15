@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { login, invalidateTokens, getCurrentUser } from 'api/bookReader';
+import { login, invalidateTokens, getCurrentUser } from 'api/bookReader/user';
 
 
 const initialState = {

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-import { fetchBook } from 'api/bookReader';
+import { fetchBook } from 'api/bookReader/books';
 import { editBook } from 'state/reducers/booksSlice';
 import TagInput from 'components/TagInput';
 
