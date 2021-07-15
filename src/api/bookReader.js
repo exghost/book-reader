@@ -108,8 +108,6 @@ export const getCurrentUser = async () => {
 export const addBook = async ({title, isbn, publishYear, edition, authors, genres, tags, bookFile }) => {
     let formData = new FormData();
 
-    console.log(authors);
-
     const query = `
     mutation ($data: CreateBookInput!, $file: Upload!) { 
         addBook(data: $data, file: $file) { 
@@ -236,4 +234,74 @@ export const fetchBooksByCurrentUser = async () => {
 
     if(response.data.errors) throw new Error(response.data.errors.message);
     return response.data?.data?.booksByCurrentUser;
+}
+
+export const updateBook = async (bookData) => {
+    const {
+        id,
+        title,
+        isbn,
+        edition,
+        publishYear,
+        authors,
+        removedAuthors,
+        genres,
+        removedGenres,
+        tags,
+        removedTags
+    } = bookData;
+
+    let response;
+
+    let variables = {
+        data: {
+            id: Number(id),
+            title,
+            isbn,
+            edition,
+            publishYear,
+            authors,
+            removedAuthors,
+            genres,
+            removedGenres,
+            tags,
+            removedTags
+        }
+    }
+    console.log(variables);
+    try {
+        response  = await bookReaderBase({
+            method: 'post',
+            data: {
+                query: `
+                mutation($data: EditBookInput!) {
+                    updateBook(data: $data) {
+                        id
+                        title
+                        isbn
+                        edition
+                        publishYear
+                        filename
+                        authors {
+                            name
+                        }
+                        genres {
+                            label
+                        }
+                        tags {
+                            label
+                        }
+                    }
+                }
+                `,
+                variables: JSON.stringify(variables)
+            },
+            withCredentials: true
+        });
+    } catch(err) {
+        throw new Error('Unable to update book');
+    }
+    console.log(response);
+    if(response.data.errors) throw new Error(response.data.errors.message);
+    return response.data?.data?.updateBook;
 }

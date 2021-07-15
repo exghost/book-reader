@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { addBook, fetchBooksByCurrentUser } from '../../api/bookReader';
+import { 
+    addBook, 
+    fetchBooksByCurrentUser, 
+    updateBook 
+} from 'api/bookReader';
 
 const initialState = {
     booksStatus: 'idle', 
@@ -22,6 +26,14 @@ export const addNewBook = createAsyncThunk(
         return await addBook(bookData);
     }
 );
+
+export const editBook = createAsyncThunk(
+    'books/editBookStatus',
+    async(values) => {
+        console.log(values);
+        return await updateBook(values);
+    }
+)
 
 const booksSlice = createSlice({
     name: 'books',
@@ -70,15 +82,47 @@ const booksSlice = createSlice({
                 state.booksStatus === 'uploadingNewBook' &&
                 state.currentRequestId === meta.requestId
             ) {
-                state.books = [...state.books, payload];
+                state.list = [...state.books, payload];
                 state.booksStatus = 'idle';
                 state.currentRequestId = undefined;
                 state.error = '';
             }
         },
-        [addNewBook.fulfilled]: (state, { meta, error }) => {
+        [addNewBook.rejected]: (state, { meta, error }) => {
             if(
                 state.booksStatus === 'uploadingNewBook' &&
+                state.currentRequestId === meta.requestId
+            ) {
+                state.booksStatus = 'idle';
+                state.error = error.message;
+                state.currentRequestId = undefined;
+            }
+        },
+        [editBook.pending]: (state, { meta }) => {
+            if(
+                state.booksStatus === 'idle'
+            ) {
+                state.booksStatus = 'editingBook';
+                state.currentRequestId = meta.requestId;
+            }
+        },
+        [editBook.fulfilled]: (state, { meta, payload }) => {
+            if(
+                state.booksStatus === 'editingBook' &&
+                state.currentRequestId === meta.requestId
+            ) {
+                state.list = state.list.map(book => {
+                    if(book.id === payload.id) return payload;
+                    return book;
+                });
+                state.booksStatus = 'idle';
+                state.currentRequestId = undefined;
+                state.error = '';
+            }
+        },
+        [editBook.rejected]: (state, { meta, error }) => {
+            if(
+                state.booksStatus === 'editingBook' &&
                 state.currentRequestId === meta.requestId
             ) {
                 state.booksStatus = 'idle';

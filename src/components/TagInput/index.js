@@ -26,8 +26,10 @@ const TagInput = (props) => {
     const deleteTag = (index) => {
         const deletedTags = tags.filter((_, i) => i === index);
         setTags(tags.filter((_, i) => i !== index));
-        if(onDelete && deletedTags.length) 
+        
+        if(onDelete && deletedTags.length) { 
             onDelete(deletedTags[0]);
+        }
     }
 
     const onKeyPress = (e) => {
