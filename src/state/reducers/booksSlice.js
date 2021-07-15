@@ -30,7 +30,6 @@ export const addNewBook = createAsyncThunk(
 export const editBook = createAsyncThunk(
     'books/editBookStatus',
     async(values) => {
-        console.log(values);
         return await updateBook(values);
     }
 )
