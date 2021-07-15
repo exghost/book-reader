@@ -48,7 +48,6 @@ export const invalidateTokens = async () => {
     }
 
     if(response.data.errors) {
-        console.log(response.data.errors);
         throw new Error(`Unable to invalidate tokens`);
     }
     return response.data?.data?.login;
@@ -100,7 +99,7 @@ export const getCurrentUser = async () => {
         throw new Error('Unable to connect');
     }
 
-    if(response.data?.errors) throw new Error(response.data.errors.message);
+    if(response.data?.errors) throw new Error(response.data.errors[0].message);
     
     return response.data?.data?.me;
 }
@@ -194,7 +193,7 @@ export const fetchBook = async (id) => {
         throw new Error('Unable to retrieve book');
     }
 
-    if(response.data.errors) throw new Error(response.data.errors.message);
+    if(response.data.errors) throw new Error(response.data.errors[0].message);
     return response.data?.data?.book;
 }
 
@@ -232,7 +231,7 @@ export const fetchBooksByCurrentUser = async () => {
         throw new Error('Unable to fetch books');
     }
 
-    if(response.data.errors) throw new Error(response.data.errors.message);
+    if(response.data.errors) throw new Error(response.data.errors[0].message);
     return response.data?.data?.booksByCurrentUser;
 }
 
@@ -244,11 +243,8 @@ export const updateBook = async (bookData) => {
         edition,
         publishYear,
         authors,
-        removedAuthors,
         genres,
-        removedGenres,
         tags,
-        removedTags
     } = bookData;
 
     let response;
@@ -258,16 +254,13 @@ export const updateBook = async (bookData) => {
             id: Number(id),
             title,
             isbn,
-            edition,
-            publishYear,
+            edition: Number(edition),
+            publishYear: Number(publishYear),
             authors,
-            removedAuthors,
             genres,
-            removedGenres,
-            tags,
-            removedTags
+            tags
         }
-    }
+    };
     console.log(variables);
     try {
         response  = await bookReaderBase({
@@ -301,7 +294,7 @@ export const updateBook = async (bookData) => {
     } catch(err) {
         throw new Error('Unable to update book');
     }
-    console.log(response);
-    if(response.data.errors) throw new Error(response.data.errors.message);
+
+    if(response.data.errors) throw new Error(response.data.errors[0].message);
     return response.data?.data?.updateBook;
 }

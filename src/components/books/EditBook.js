@@ -14,16 +14,13 @@ const EditBook = () => {
     const error = useSelector(state => state.books.error);
 
     const [currentBook, setCurrentBook] = useState(undefined);
-    const [removedAuthors, setRemovedAuthors] = useState([]);
-    const [removedGenres, setRemovedGenres] = useState([]);
-    const [removedTags, setRemovedTags] = useState([]);
     const [editComplete, setEditComplete] = useState(false);
 
     const onSubmitHandler = async(values) => {
-        const bookData = {...values, id, removedAuthors, removedGenres, removedTags};
-        await dispatch(editBook(bookData));
-        
-        if(!error) {
+        const bookData = {...values, id};
+        let result = await dispatch(editBook(bookData));
+
+        if(result.type !== 'books/editBookStatus/rejected') {
             setEditComplete(true);
         }
     }
@@ -90,7 +87,6 @@ const EditBook = () => {
                                     value={currentBook.authors}
                                     name="authors"
                                     onChange={(authors) => formProps.setFieldValue('authors', authors) }
-                                    onDelete={(author) => setRemovedAuthors([...removedAuthors, author])}
                                 />
                             </div>
                             <div className="form-group">
@@ -98,7 +94,6 @@ const EditBook = () => {
                                     value={currentBook.genres}
                                     name="genres"
                                     onChange={(genres) => formProps.setFieldValue('genres', genres) }
-                                    onDelete={(genre) => setRemovedGenres([...removedGenres, genre])}
                                 />
                             </div>
                             <div className="form-group">
@@ -106,7 +101,6 @@ const EditBook = () => {
                                     value={currentBook.tags}
                                     name="tags"
                                     onChange={(tags) => formProps.setFieldValue('tags', tags) }
-                                    onDelete={(tag) => setRemovedTags([...removedTags, tag])}
                                 />
                             </div>
                             <button type="submit">Submit</button>
