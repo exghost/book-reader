@@ -11,6 +11,8 @@ import EditBook from 'components/books/EditBook';
 import BookLibrary from 'components/books/BookLibrary';
 
 import { checkAuthentication } from 'state/reducers/userSlice';
+import { getAllAuthors } from 'state/reducers/authorsSlice';
+
 
 function App() {
     const dispatch = useDispatch();
@@ -18,6 +20,7 @@ function App() {
 
     useEffect(async () => {
         dispatch(checkAuthentication());
+        dispatch(getAllAuthors());
     }, []);
 
   return (
