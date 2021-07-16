@@ -12,6 +12,7 @@ import BookLibrary from 'components/books/BookLibrary';
 
 import { checkAuthentication } from 'state/reducers/userSlice';
 import { getAllAuthors } from 'state/reducers/authorsSlice';
+import { getAllGenres } from 'state/reducers/genresSlice';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
     useEffect(async () => {
         dispatch(checkAuthentication());
         dispatch(getAllAuthors());
+        dispatch(getAllGenres());
     }, []);
 
   return (

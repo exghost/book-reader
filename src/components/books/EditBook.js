@@ -7,6 +7,7 @@ import { fetchBook } from 'api/bookReader/books';
 import { editBook } from 'state/reducers/booksSlice';
 import TagInput from 'components/TagInput';
 import { addAuthors } from 'state/reducers/authorsSlice';
+import { addGenres } from 'state/reducers/genresSlice';
 
 const EditBook = () => {
     const { id } = useParams();
@@ -14,6 +15,7 @@ const EditBook = () => {
     const dispatch = useDispatch();
     const error = useSelector(state => state.books.error);
     const authorList = useSelector(state => state.authors.list);
+    const genreList = useSelector(state => state.genres.list);
 
     const [currentBook, setCurrentBook] = useState(undefined);
     const [editComplete, setEditComplete] = useState(false);
@@ -24,6 +26,7 @@ const EditBook = () => {
 
         if(result.type !== 'books/editBookStatus/rejected') {
             dispatch(addAuthors(values.authors));
+            dispatch(addGenres(values.genres));
             setEditComplete(true);
         }
     }
@@ -97,6 +100,7 @@ const EditBook = () => {
                                 <TagInput
                                     value={currentBook.genres}
                                     name="genres"
+                                    listData={genreList}
                                     onChange={(genres) => formProps.setFieldValue('genres', genres) }
                                 />
                             </div>
