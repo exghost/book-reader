@@ -5,9 +5,12 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import { fetchBook } from 'api/bookReader/books';
 import { editBook } from 'state/reducers/booksSlice';
-import TagInput from 'components/TagInput';
+
 import { addAuthors } from 'state/reducers/authorsSlice';
 import { addGenres } from 'state/reducers/genresSlice';
+import { addTags } from 'state/reducers/tagsSlice';
+
+import TagInput from 'components/TagInput';
 
 const EditBook = () => {
     const { id } = useParams();
@@ -16,6 +19,7 @@ const EditBook = () => {
     const error = useSelector(state => state.books.error);
     const authorList = useSelector(state => state.authors.list);
     const genreList = useSelector(state => state.genres.list);
+    const tagList = useSelector(state => state.tags.list);
 
     const [currentBook, setCurrentBook] = useState(undefined);
     const [editComplete, setEditComplete] = useState(false);
@@ -27,6 +31,7 @@ const EditBook = () => {
         if(result.type !== 'books/editBookStatus/rejected') {
             dispatch(addAuthors(values.authors));
             dispatch(addGenres(values.genres));
+            dispatch(addTags(values.tags));
             setEditComplete(true);
         }
     }
@@ -108,6 +113,7 @@ const EditBook = () => {
                                 <TagInput
                                     value={currentBook.tags}
                                     name="tags"
+                                    listData={tagList}
                                     onChange={(tags) => formProps.setFieldValue('tags', tags) }
                                 />
                             </div>

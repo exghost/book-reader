@@ -13,6 +13,7 @@ import BookLibrary from 'components/books/BookLibrary';
 import { checkAuthentication } from 'state/reducers/userSlice';
 import { getAllAuthors } from 'state/reducers/authorsSlice';
 import { getAllGenres } from 'state/reducers/genresSlice';
+import { getAllTags } from 'state/reducers/tagsSlice';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         dispatch(checkAuthentication());
         dispatch(getAllAuthors());
         dispatch(getAllGenres());
+        dispatch(getAllTags());
     }, []);
 
   return (
